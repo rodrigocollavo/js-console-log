@@ -1,0 +1,72 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<title>JS - Console Log Sample</title>
+        <meta name="description" content="">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" type="text/javascript"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js" type="text/javascript"></script>
+        <script src="js/console-log.js" type="text/javascript"></script>
+        <link href="css/console-log.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <header>
+            <b>JS - Console Log</b>
+        </header>
+        <button id="pause-btn">Pause</button>
+        <input type="checkbox" id="autoscroll" checked/>Autoscroll
+        <div id="console-log">
+        </div>
+
+        <script>
+            $(function() {
+                var counter = 0;
+                
+                /* AUTOSCROLL */
+                $('#autoscroll').on('click', function(event) {
+                    $('#console-log').consolelog('autoscroll', event.target.checked);
+                });
+                
+                /* PAUSE - RESUME */
+                $('#pause-btn').click(function() {
+                    togglePause();
+                });
+            
+                function togglePause() {
+                    $('#pause-btn').toggleClass("down");
+                    if($('#pause-btn').hasClass("down")) {
+                        $("#console-log").consolelog('pause');
+                        $('#pause-btn').text('Resume');
+                    }
+                    else {
+                        $("#console-log").consolelog('resume');
+                        $('#pause-btn').text('Pause');
+                    }
+                };
+                
+                /* DELEGATES */
+                var preProcessData = function (data) {
+                    if(data.length == 0) {
+                        data = "<div>this is a linea added by code - " + counter + "</div>";
+                        counter++;
+                    }
+                    return data.replace(/\n/g, "<br/>");
+                };
+
+                /* INIT CONSOLE */
+                $("#console-log").consolelog({
+                    preProcessDelegate: preProcessData,
+                    ajaxUrl: 'text.txt'
+                });
+                $("#console-log").consolelog('start');
+            });
+        </script>
+    </body>
+</html>
+
+
